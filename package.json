@@ -1,0 +1,23 @@
+{
+  "name": "sql-templates",
+  "version": "0.0.1",
+  "description": "ES6 tagged template string functions for SQL statements.",
+  "main": "index.js",
+  "scripts": {},
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "keywords": [
+    "sql",
+    "templates",
+    "es6",
+    "strings",
+    "tagged"
+  ],
+  "author": "Cody Coons <cody@codycoons.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/snooc/sql-templates.git"
+  }
+}
