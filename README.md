@@ -22,7 +22,7 @@ console.log(userSelectQuery('foo@bar.com', 'secret'));
 // => {
 // =>   text: 'SELECT "id", "email", "password", "created", "modified" FROM users WHERE email = $1 AND password = $2',
 // =>   values: ['foo@bar.com', 'secret']
-// = }
+// => }
 ```
 
 ## License
