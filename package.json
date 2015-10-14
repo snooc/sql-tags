@@ -1,6 +1,6 @@
 {
   "name": "sql-tags",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "ES6 tagged template string functions for SQL statements.",
   "main": "index.js",
   "scripts": {
