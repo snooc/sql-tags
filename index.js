@@ -1,75 +1,39 @@
-"use strict";
+'use strict';
 
-const dialect = "pg";
+const utils = require('./lib/utils');
+const sql = require('./lib/sql');
 
 module.exports = function() {
-  if (dialect === "pg") {
-    return module.exports.pgSql.apply(arguments);
-  }
-  return module.exports.genericSql.apply(arguments);
-};
-
-module.exports.genericSql = function() {
-  const text = arguments[0];
-
-  let args = new Array(arguments.length - 1);
-  for (let i = 0; i < args.length; ++i) {
-    args[i] = arguments[i + 1];
+  const strings = utils.cleanStrings(arguments[0]);
+  const values = new Array(arguments.length - 1);
+  for (let index = 1; index <= values.length; ++index) {
+    values[index - 1] = arguments[index];
   }
 
-  return { text: text.join('?'), values: args };
-};
+  const compiledQuery = sql.compile({ strings: strings, values: values });
 
-module.exports.pgSql = function() {
-  const text = cleanText(arguments[0]);
-
-  let args = new Array(arguments.length - 1);
-  for (let i = 0; i < args.length; ++i) {
-    args[i] = arguments[i + 1];
-  }
-
-  let values = [];
-  let newText = new String();
-  text.forEach(function(fragment, index) {
-    let argText = new String();
-    if (typeof args[index] === "undefined") {
-
+  let queryFunction = function() {
+    if (arguments.length !== compiledQuery.values.length) {
+      throw new Error('Missing arguments for query. Expected ' + arguments.length + ' - Actual ' + compiledQuery.values.length);
     }
-    else if (typeof args[index] === "object") {
-      if (typeof args[index]["table"] === "string") {
-        argText = args[index]["table"];
-      } else if (typeof args[index]["columns"] === "object") {
-        args[index]["columns"].forEach(function(column, columnIndex) {
-          if (columnIndex === 0) {
-            argText = argText.concat("\"" + column + "\"");
-          } else {
-            argText = argText.concat(", \"" + column + "\"");
-          }
-        });
+
+    let args = new Array(arguments.length);
+    for (let index = 0; index < args.length; ++index) {
+      args[index] = arguments[index];
+    }
+
+    let text = '';
+    compiledQuery.strings.forEach(function(string, index) {
+      if (compiledQuery.values[index]) {
+        text = text.concat(string + '$' + (index + 1));
+      } else {
+        text = text.concat(string);
       }
-    } else {
-      values.push(args[index]);
-      argText = "$" + values.length;
-    }
-    newText = newText.concat(fragment + argText);
-  });
+    });
 
-  return { text: newText, values: values };
-}
+    return { text: text, values: args };
+  };
+  queryFunction._compiledQuery = compiledQuery;
 
-function cleanText(text) {
-  let newText = new Array(text.length);
-  text.forEach(function(fragment, index) {
-    newText[index] = fragment
-      .split("\n")
-      .map(function(fragment) {
-        return fragment.replace(/^[ \\t]{2,}/gm, "");
-      })
-      .join(" ");
-  });
-
-  newText[0] = newText[0].replace(/^[ \\t]/gm, "");
-  newText[newText.length - 1] = newText[newText.length - 1].replace(/[ \\t]$/gm, "");
-
-  return newText;
-}
+  return queryFunction;
+};

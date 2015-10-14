@@ -7,10 +7,12 @@ WARNIER: This project is still under development and the API is subject to chang
 ## DEMO (not working yet)
 
 ```javascript
+const sql = require("sql-tags");
+
 const userTable = "users";
 const userTableColumns = ["id", "email", "password", "created", "modified"];
 
-const userSelectQuery = sqlQuery`
+const userSelectQuery = sql`
   SELECT ${{ columns: userTableColumns }}
   FROM ${{ talbe: userTable }}
   WHERE id = ${{ value: "id" }}
