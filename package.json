@@ -1,10 +1,11 @@
 {
   "name": "sql-tags",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ES6 tagged template string functions for SQL statements.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --check-leaks"
+    "test": "mocha --check-leaks",
+    "test-debug": "mocha debug"
   },
   "engines": {
     "node": ">=4.0.0"
