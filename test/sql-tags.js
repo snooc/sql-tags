@@ -49,5 +49,17 @@ describe('sql', function() {
       assert.equal(query.text, 'SELECT "id", "email", "password", "created", "modified" FROM users WHERE email = $1 AND password = $2');
       assert.deepEqual(query.values, ['foo@bar.com', 'secret']);
     });
+
+    it('should return a query object with correct whitelisted arguments', function() {
+      const usersQuery = sql`
+        SELECT ${{ columns: ["id", "email", "password", "created", "modified"], columnWhitelist: ["id", "email"]}}
+        FROM ${{ table: "users" }}
+        WHERE email = ${{ value: "email" }} AND password = ${{ value: "password" }}
+      `;
+
+      const query = usersQuery('foo@bar.com', 'secret');
+      assert.equal(query.text, 'SELECT "id", "email" FROM users WHERE email = $1 AND password = $2');
+      assert.deepEqual(query.values, ['foo@bar.com', 'secret']);
+    });
   });
 });
