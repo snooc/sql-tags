@@ -2,26 +2,38 @@
 
 ES6 tag functions for SQL template strings.
 
-WARNING: This project is still under development and the API is subject to change.
+WARNING: This project is still under development and the API is subject to change. A major overhaul to the API was introduced in v0.1.0.
 
 ## DEMO
 
 ```javascript
 const sql = require('sql-tags');
 
-const userTable = 'users';
-const userTableColumns = ['id', 'email', 'password', 'created', 'modified'];
+const usersTable = 'users';
+const usersTableColumns = ['id', 'email', 'password', 'active', 'created', 'modified'];
 
-const usersSelectQuery = sql`
-  SELECT ${{ columns: ['id', 'email', 'password', 'created', 'modified']}}
-  FROM ${{ table: 'users' }}
-  WHERE email = ${{ value: 'email' }} AND password = ${{ value: 'password' }}
+const findUsersQuery = sql`
+  SELECT ${usersTableColumns}
+  FROM ${usersTable}
+  WHERE ${{ equalsFragment: { join: 'AND', whenEmpty: 'TRUE' } }}
 `;
 
-console.log(userSelectQuery('foo@bar.com', 'secret'));
+userSelectQuery({ email: 'foobar@example.com', active: true });
 // => {
-// =>   text: 'SELECT "id", "email", "password", "created", "modified" FROM users WHERE email = $1 AND password = $2',
-// =>   values: ['foo@bar.com', 'secret']
+// =>   text: 'SELECT "id", "email", "password", "active", "created", "modified" FROM users WHERE "email" = $1 AND "active" = $2',
+// =>   values: ['foo@bar.com', true]
+// => }
+
+userSelectQuery({});
+// => {
+// =>   text: 'SELECT "id", "email", "password", "active", "created", "modified" FROM users WHERE TRUE',
+// =>   values: []
+// => }
+
+userSelectQuery();
+// => {
+// =>   text: 'SELECT "id", "email", "password", "active", "created", "modified" FROM users WHERE TRUE',
+// =>   values: []
 // => }
 ```
 

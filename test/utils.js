@@ -55,4 +55,28 @@ describe('utils', function() {
       });
     });
   });
+
+  describe('#combineEveryOther()', function() {
+    it('should combine two arrays of the same length', function() {
+      const a1 = [1,3,5];
+      const a2 = [2,4,6];
+      const a = utils.combineEveryOther(a1, a2);
+      assert.deepEqual(a, [1,2,3,4,5,6]);
+    });
+
+    it('should combine two arrays with different length', function() {
+      const a1 = [1,3,5,7];
+      const a2 = [2,4];
+      const a = utils.combineEveryOther(a1, a2);
+      assert.deepEqual(a, [1,2,3,4,5,7]);
+
+      const aa = utils.combineEveryOther(a2, a1);
+      assert.deepEqual(aa, [2,1,4,3,5,7])
+    });
+
+    it('should combine two empty arrarys', function() {
+      const a = utils.combineEveryOther([],[]);
+      assert.deepEqual(a, []);
+    });
+  });
 });
