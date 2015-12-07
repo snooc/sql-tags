@@ -98,6 +98,27 @@ function (args, paramIndexStart) {
 
 Custom Fragments must return an object that contains the query fragment text and values. Values must be in parameterized query form of `$<num>` start with the paramIndexStart.
 
+##### Example
+
+```javascript
+function simpleTrueFragment(args, paramIndexStart) {
+  return {
+    text: '$' + paramIndexStart,
+    values: [true]
+  };
+}
+
+const query = sql`
+  SELECT ${simpleTrueFragment}
+`;
+
+query();
+// => {
+// =>   text: 'SELECT $1',
+// =>   values: [true]
+// => }
+```
+
 ## License
 
 MIT
