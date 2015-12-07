@@ -90,5 +90,16 @@ describe('Query', function() {
       assert.equal(qs.text, 'SELECT * FROM foobar WHERE TRUE');
       assert.deepEqual(qs.values, []);
     });
+
+    it('should throw an Error if empty args and no empty state given', function() {
+      const query = new Query([
+        'SELECT * FROM foobar WHERE',
+        { equalsFragment: { join: 'AND' } }
+      ]);
+      const q = query.compile();
+      assert.throws(function() {
+        const qs = q();
+      }, /Empty/);
+    });
   });
 });
