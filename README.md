@@ -37,6 +37,18 @@ userSelectQuery();
 // =>   text: 'SELECT "id", "email", "password", "active", "created", "modified" FROM users WHERE TRUE',
 // =>   values: []
 // => }
+
+const updateUsersQuery = sql`
+  UPDATE ${usersTable}
+  SET ${{ equalsFragment: { join: ',', skip: ['id'] } }}
+  WHERE "id" = ${{ value: 'id' }}
+`;
+
+updateUsersQuery({ id: 4, email: 'foobar@example.com', modified: new Date() });
+// => {
+// =>   text: 'UPDATE users SET "email" = $1, "modified" = $2 WHERE "id" = $3',
+// =>   values: ['foobar@example.com', "Mon Dec 07 2015 09:36:00 GMT-0500 (EST)", 4]
+// => }
 ```
 
 ## License

@@ -68,6 +68,18 @@ describe('Query', function() {
       assert.deepEqual(qs.values, ['foo@bar.com', true]);
     });
 
+    it('should compile equals fragment with skip into a paramaterized query', function() {
+      const query = new Query([
+        'UPDATE foobar', 'SET',
+        { equalsFragment: { join: ',', skip: ['id'] } },
+        'WHERE id = 4'
+      ]);
+      const q = query.compile();
+      const qs = q({ id: 4, email: 'foo@bar.com', active: true });
+      assert.equal(qs.text, 'UPDATE foobar SET "email" = $1 , "active" = $2 WHERE id = 4');
+      assert.deepEqual(qs.values, ['foo@bar.com', true]);
+    });
+
     it('should compile multiple equals fragment into a paramaterized query', function() {
       const query = new Query([
         'SELECT * FROM foobar WHERE',
