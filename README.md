@@ -1,5 +1,7 @@
 # SQL Templates Tag
 
+[![Build Status](https://travis-ci.org/snooc/sql-tags.svg?branch=master)](https://travis-ci.org/snooc/sql-tags)
+
 ES6 tag functions for SQL template strings.
 
 WARNING: This project is still under development and the API is subject to change. A major overhaul to the API was introduced in v0.1.0.
