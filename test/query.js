@@ -144,6 +144,25 @@ describe('Query', function() {
       });
     });
 
+    describe('Fragment: custom', function() {
+      it('should compile custom fragmnt into a parameterized string', function() {
+        const query = new Query([
+          'SELECT * FROM users WHERE "id" =',
+          function (args, paramIndexStart) {
+            return {
+              text: '$1',
+              values: [10]
+            };
+          },
+          'ORDER BY id'
+        ]);
+        const q = query.compile();
+        const qs = q();
+        assert.equal(qs.text, 'SELECT * FROM users WHERE "id" = $1 ORDER BY id');
+        assert.deepEqual(qs.values, [10]);
+      });
+    });
+
     describe('Complex queries', function() {
       it('query with value and equals fragments', function() {
         const query = new Query([
