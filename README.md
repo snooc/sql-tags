@@ -17,7 +17,7 @@ const usersTableColumns = ['id', 'email', 'password', 'active', 'created', 'modi
 const findUsersQuery = sql`
   SELECT ${usersTableColumns}
   FROM ${usersTable}
-  WHERE ${{ equalsFragment: { join: 'AND', whenEmpty: 'TRUE' } }}
+  WHERE ${{ equals: { join: 'AND', whenEmpty: 'TRUE' } }}
 `;
 
 userSelectQuery({ email: 'foobar@example.com', active: true });
@@ -40,13 +40,13 @@ userSelectQuery();
 
 const updateUsersQuery = sql`
   UPDATE ${usersTable}
-  SET ${{ equalsFragment: { join: ',', skip: ['id'] } }}
+  SET ${{ equals: { join: ',', skip: ['id'] } }}
   WHERE "id" = ${{ value: 'id' }}
 `;
 
 updateUsersQuery({ id: 4, email: 'foobar@example.com', modified: new Date() });
 // => {
-// =>   text: 'UPDATE users SET "email" = $1, "modified" = $2 WHERE "id" = $3',
+// =>   text: 'UPDATE users SET "email" = $1 , "modified" = $2 WHERE "id" = $3',
 // =>   values: ['foobar@example.com', "Mon Dec 07 2015 09:36:00 GMT-0500 (EST)", 4]
 // => }
 ```
