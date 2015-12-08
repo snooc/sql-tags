@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --check-leaks",
-    "test-debug": "mocha debug"
+    "lint": "eslint index.js lib/**/*.js test/**/*.js"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -24,6 +24,7 @@
     "url": "https://github.com/snooc/sql-tags.git"
   },
   "devDependencies": {
+    "eslint": "^1.10.3",
     "mocha": "^2.3.3"
   }
 }

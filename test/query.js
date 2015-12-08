@@ -148,7 +148,7 @@ describe('Query', function() {
       it('should compile custom fragmnt into a parameterized string', function() {
         const query = new Query([
           'SELECT * FROM users WHERE "id" =',
-          function (args, paramIndexStart) {
+          function(args, paramIndexStart) {
             return {
               text: '$1',
               values: [10]
